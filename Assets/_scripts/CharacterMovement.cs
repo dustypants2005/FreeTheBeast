@@ -26,8 +26,7 @@ public class CharacterMovement : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
 
     void Update()
-    {
-        
+    {        
         CharacterController controller = GetComponent<CharacterController>();
         if (controller.isGrounded)
         {
@@ -36,11 +35,9 @@ public class CharacterMovement : MonoBehaviour
             moveDirection *= speed;
             if (Input.GetButton("Jump"))
                 moveDirection.y = jumpSpeed;
-
         }
         moveDirection.y -= gravity * Time.deltaTime;
         controller.Move(moveDirection * Time.deltaTime); 
-
         SetInputs();
         CalculatePlayerMovement();
         RotatePlayer();
