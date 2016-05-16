@@ -56,30 +56,8 @@ public class PhotonAnimatorViewEditor : Editor
 
     private int GetLayerCount()
     {
-#if UNITY_5_0 || UNITY_5
-        return (this.m_Controller == null) ? 0 : this.m_Controller.layers.Length;
-#else
         return this.m_Animator.layerCount;
-#endif
-    }
-
-
-#if UNITY_5_0
-    private RuntimeAnimatorController GetEffectiveController(Animator animator)
-    {
-        RuntimeAnimatorController controller = animator.runtimeAnimatorController;
-
-        AnimatorOverrideController overrideController = controller as AnimatorOverrideController;
-        while (overrideController != null)
-        {
-            controller = overrideController.runtimeAnimatorController;
-            overrideController = controller as AnimatorOverrideController;
-        }
-
-        return controller;
-    }
-#endif
-
+    }    
 
     private void OnEnable()
     {
