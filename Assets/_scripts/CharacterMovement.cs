@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class CharacterMovement : MonoBehaviour 
+public class CharacterMovement : NetworkBehaviour 
 {
     public float speed = 1.0f; // CHARACTER SPEED
     public float playerFollowSpeed = 1.0f;
@@ -15,6 +16,8 @@ public class CharacterMovement : MonoBehaviour
     private float rh; // RIGHT HORIZONTAL
     private float rv; // RIGHT VERTICAL
 
+    private CharacterController _playerController;
+
     public float rotateSensitivity = 1;
     public float deadzone = .01f;
     public bool amIRightStick = true;
@@ -27,20 +30,19 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+        if (!isLocalPlayer) return;
+
         
-        CharacterController controller = GetComponent<CharacterController>();
-        if (controller.isGrounded)
+        if (_playerController.isGrounded) // only move if grounded
         {
             moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
             moveDirection = transform.TransformDirection(moveDirection);
             moveDirection *= speed;
             if (Input.GetButton("Jump"))
                 moveDirection.y = jumpSpeed;
-
         }
         moveDirection.y -= gravity * Time.deltaTime;
-        controller.Move(moveDirection * Time.deltaTime); 
-
+        _playerController.Move(moveDirection * Time.deltaTime); 
         SetInputs();
         CalculatePlayerMovement();
         RotatePlayer();
@@ -53,6 +55,11 @@ public class CharacterMovement : MonoBehaviour
         if (camera == null)
         {
             spawnCamera();
+        }
+
+        if (isLocalPlayer)
+        {
+            _playerController = GetComponent<CharacterController>();
         }
     }
        
@@ -142,7 +149,7 @@ public class CharacterMovement : MonoBehaviour
 
     void MoveCamera()
     {
-        camera.transform.position = transform.position + new Vector3(0 , cameraDistance, 0); 
+        camera.transform.position = Vector3.Lerp( transform.position, new Vector3(0 , cameraDistance, 0), cameraFollowSpeed); 
         camera.transform.rotation = cameraRotation;
     }
 

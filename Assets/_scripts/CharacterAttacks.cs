@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class CharacterAttacks : MonoBehaviour 
+public class CharacterAttacks : NetworkBehaviour 
 {
     public Transform gun;
     public float bulletSpeed = 50.0f;
     public float attackSpeed = 0.5f;
     private bool shot;
     public GameObject characterModel;
+    public Object Bullet;
 
     void Update ()
     {
+        if (!isLocalPlayer) return;
+
         if(Input.GetAxis("Fire1") == 1.0f){
             if(!shot){
                 Fire();
@@ -32,8 +36,8 @@ public class CharacterAttacks : MonoBehaviour
 
     void Fire()
     {
-        GameObject bullet = (GameObject)PhotonNetwork.Instantiate("Bullet", gun.position, characterModel.transform.rotation, 0);
-        var rb = bullet.GetComponent<Rigidbody>();
+        var bullet = Instantiate(Bullet, gun.position, characterModel.transform.rotation);
+        var rb = ((GameObject)bullet).GetComponent<Rigidbody>();
         rb.AddForce(transform.localPosition * bulletSpeed);
     }
 }
