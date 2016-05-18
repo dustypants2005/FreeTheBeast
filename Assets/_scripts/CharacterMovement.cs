@@ -30,22 +30,11 @@ public class CharacterMovement : NetworkBehaviour
 
     void Update()
     {
-        if (!isLocalPlayer) return;
-
-        
-        if (_playerController.isGrounded) // only move if grounded
-        {
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            moveDirection = transform.TransformDirection(moveDirection);
-            moveDirection *= speed;
-            if (Input.GetButton("Jump"))
-                moveDirection.y = jumpSpeed;
-        }
-        moveDirection.y -= gravity * Time.deltaTime;
-        _playerController.Move(moveDirection * Time.deltaTime); 
+        if (!isLocalPlayer) return;        
         SetInputs();
         CalculatePlayerMovement();
         RotatePlayer();
+        MovePlayer();
     }
 
 	
@@ -68,20 +57,22 @@ public class CharacterMovement : NetworkBehaviour
         MoveCamera();           
     } 
 
-    void MovePlayer(CharacterController controller)
+    void MovePlayer()
     {
-        controller.Move((-playerDirection) * Time.deltaTime);
+        _playerController.Move(moveDirection * Time.deltaTime);
     }
 
     void CalculatePlayerMovement()
     {
-       playerDirection += (Vector3.right * lh * deadzone +
-          Vector3.forward * lv * deadzone).normalized * speed;
 
-       if (playerDirection.sqrMagnitude > 1f)
-       {
-           playerDirection = playerDirection.normalized;
-       }
+        if (_playerController.isGrounded) // only move if grounded
+        {
+            moveDirection = new Vector3(lh, 0, lv);
+            moveDirection *= speed;
+            if (Input.GetButton("Jump"))
+                moveDirection.y = jumpSpeed;
+        }
+        moveDirection.y -= gravity * Time.deltaTime;
     }
 
     /// <summary>
@@ -89,7 +80,6 @@ public class CharacterMovement : NetworkBehaviour
     /// </summary>
     void RotatePlayer()
     {
-        // tried to write this as "float angle, right, left = 0;" but unity kept giving errors on only "right"
         float angle = 0;
         float right = 0;
         float left = 0;
@@ -111,7 +101,7 @@ public class CharacterMovement : NetworkBehaviour
                 angle = right;
             }
 
-            characterModel.transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
+            transform.rotation = Quaternion.Euler(new Vector3(0, angle, 0));
         }
         
     }
@@ -149,7 +139,8 @@ public class CharacterMovement : NetworkBehaviour
 
     void MoveCamera()
     {
-        camera.transform.position = Vector3.Lerp( transform.position, new Vector3(0 , cameraDistance, 0), cameraFollowSpeed); 
+        var newPosition = transform.position + new Vector3(0, cameraDistance, 0);
+        camera.transform.position = Vector3.Slerp(camera.transform.position, newPosition, cameraFollowSpeed);
         camera.transform.rotation = cameraRotation;
     }
 

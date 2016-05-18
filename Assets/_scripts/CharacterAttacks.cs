@@ -6,7 +6,7 @@ public class CharacterAttacks : NetworkBehaviour
 {
     public Transform gun;
     public float bulletSpeed = 50.0f;
-    public float attackSpeed = 0.5f;
+    public float attackSpeed = 0.1f;
     private bool shot;
     public GameObject characterModel;
     public Object Bullet;
@@ -36,8 +36,8 @@ public class CharacterAttacks : NetworkBehaviour
 
     void Fire()
     {
-        var bullet = Instantiate(Bullet, gun.position, characterModel.transform.rotation);
+        var bullet = Instantiate(Bullet, gun.position, transform.rotation);
         var rb = ((GameObject)bullet).GetComponent<Rigidbody>();
-        rb.AddForce(transform.localPosition * bulletSpeed);
+        rb.AddForce( transform.forward * bulletSpeed);
     }
 }
