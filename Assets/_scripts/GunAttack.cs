@@ -18,7 +18,7 @@ namespace Assets._scripts
 
             if(Input.GetAxis("Fire1") == 1.0f){
                 if(!shot){
-                    FireCommad();
+                    CmdFire();
                     shot = true;
                     if(attackSpeed <= 0 )
                     {
@@ -47,13 +47,13 @@ namespace Assets._scripts
         }
 
         [Command]
-        public void FireCommad()
+        public void CmdFire()
         {
-            FireRPC();
+            RpcFire();
         }
 
         [ClientRpc]
-        public void FireRPC()
+        public void RpcFire()
         {
             var bullet = Instantiate(Bullet, gun.position, transform.rotation);
             var rb = ((GameObject)bullet).GetComponent<Rigidbody>();

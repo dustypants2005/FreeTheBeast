@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class PlayerController : MonoBehaviour {
+namespace Assets._scripts
+{
+    public class PlayerController : MonoBehaviour
+    {
 
-	// Use this for initialization
-	void Start () {
+        public ScriptableObject Controller { get; set; }
+
+        public float number { get; set; }
+        void Awake () {
 	
-	}
+        }
 	
-	// Update is called once per frame
-	void Update () {
+        // Update is called once per frame
+        void Update () {
 	
-	}
+        }
+    }
 }

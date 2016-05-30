@@ -4,7 +4,7 @@ using UnityEngine.Networking;
 
 namespace Assets._scripts
 {
-    public class PlayerControllerBase : NetworkBehaviour, IPlayerController 
+    public class PlayerControllerBase_ : NetworkBehaviour
     {
         public CharacterMovement CharacterMovement { get; set; }
         public CharacterConfig Config { get; set; }
@@ -16,6 +16,11 @@ namespace Assets._scripts
             Config = new CharacterConfig();
             GunAttack = new GunAttack();
             GunAttack.SetGun();
+        }
+
+        void Update()
+        {
+            CharacterMovement.UpdateMovement(Config.amIrooted, Config.inControl);
         }
 
         public void Attack()
@@ -44,3 +49,4 @@ namespace Assets._scripts
         }
     }
 }
+

@@ -19,7 +19,8 @@ namespace Assets._scripts
         /// Positive to heal. Negative for damage.
         /// </summary>
         /// <param name="hpChange"></param>
-        public void AdjustHealth(float hpChange)
+        [ClientRpc]
+        public void RpcAdjustHealth(float hpChange)
         {
             config.health += hpChange;
         }
