@@ -28,13 +28,21 @@ public class CharacterMovement : NetworkBehaviour
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
 
-    void Update()
+    /// <summary>
+    /// Update the player's controls in the Update()
+    /// </summary>
+    /// <param name="isRooted"></param>
+    /// <param name="isPlayerInControl"></param>
+    public void UpdateMovement(bool isRooted, bool isPlayerInControl)
     {
-        if (!isLocalPlayer) return;        
-        SetInputs();
-        CalculatePlayerMovement();
+        if (!isLocalPlayer) return;   // if we are not this player, we should not control that player.     
+        if(!isPlayerInControl) return; // if we are not in control, we should not all the player to control their own character.
+        if (!isRooted) // if we are rooted we should not be able to move. We shouldn't bother calculating movement if we are not planning to move 
+        {
+            CalculatePlayerMovement();
+            MovePlayer();
+        }
         RotatePlayer();
-        MovePlayer();
     }
 
 	
@@ -50,9 +58,14 @@ public class CharacterMovement : NetworkBehaviour
         {
             _playerController = GetComponent<CharacterController>();
         }
+
+        SetInputs();
     }
        
-    void FixedUpdate()
+    /// <summary>
+    /// Update the Camera's position and rotation in a FixedUpdate().
+    /// </summary>
+    public void FixedUpdateForCamera()
     {
         MoveCamera();           
     } 
