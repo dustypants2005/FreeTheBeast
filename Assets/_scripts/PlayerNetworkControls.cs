@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 namespace Assets._scripts
 {
-    public class PlayerNetworkControls : NetworkManager
+    public class PlayerNetworkControls : NetworkBehaviour
     {
         private CharacterConfig config;
 

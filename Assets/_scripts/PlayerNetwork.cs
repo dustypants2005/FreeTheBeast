@@ -54,7 +54,7 @@ namespace Assets._scripts
         /// </summary>
         /// <param name="adjustment"></param>
         [ClientRpc]
-        public void AdjustHealth(float adjustment)
+        public void RpcAdjustHealth(float adjustment)
         {
             _config.health += adjustment;
         }
@@ -64,7 +64,7 @@ namespace Assets._scripts
         /// </summary>
         /// <param name="isRooted"></param>
         [ClientRpc]
-        public void SetPlayerRoot(bool isRooted)
+        public void RpcSetPlayerRoot(bool isRooted)
         {
             _config.amIrooted = isRooted;
         }
@@ -75,7 +75,7 @@ namespace Assets._scripts
         /// <param name="isRooted"></param>
         /// <param name="duration"></param>
         [ClientRpc]
-        public void SetPlayerRootWithDuration(bool isRooted, float duration)
+        public void RpcSetPlayerRootWithDuration(bool isRooted, float duration)
         {
             _config.amIrooted = isRooted;
             Invoke("RemoveRoot", duration);
@@ -86,7 +86,7 @@ namespace Assets._scripts
         /// </summary>
         /// <param name="isEnabled"></param>
         [ClientRpc]
-        public void SetIsPlayerEnabled(bool isEnabled)
+        public void RpcSetIsPlayerEnabled(bool isEnabled)
         {
             _config.inControl = isEnabled;
         }
@@ -95,7 +95,7 @@ namespace Assets._scripts
         /// Remove any roots on the player
         /// </summary>
         [ClientRpc]
-        public void RemoveRoot()
+        public void RpcRemoveRoot()
         {
             _config.amIrooted = false;
         }
