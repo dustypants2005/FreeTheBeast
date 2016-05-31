@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class CharacterMovement : NetworkBehaviour 
+public class CharacterMovement : MonoBehaviour 
 {
     public float speed = 1.0f; // CHARACTER SPEED
     public float playerFollowSpeed = 1.0f;
@@ -28,17 +28,24 @@ public class CharacterMovement : NetworkBehaviour
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
 
-    void Update()
+    /// <summary>
+    /// Update the player's controls in the Update()
+    /// </summary>
+    /// <param name="isRooted"></param>
+    /// <param name="isPlayerInControl"></param>
+    public void UpdateMovement(bool isRooted, bool isPlayerInControl)
     {
-        if (!isLocalPlayer) return;        
-        SetInputs();
-        CalculatePlayerMovement();
+        if(!isPlayerInControl) return; // if we are not in control, we should not all the player to control their own character.
+        if (!isRooted) // if we are rooted we should not be able to move. We shouldn't bother calculating movement if we are not planning to move 
+        {
+            CalculatePlayerMovement();
+            MovePlayer();
+        }
         RotatePlayer();
-        MovePlayer();
     }
 
 	
-    void Start()
+    public void Init(bool isLocalPlayer, CharacterController controller)
     {
         FindCamera();
         if (camera == null)
@@ -48,11 +55,16 @@ public class CharacterMovement : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            _playerController = GetComponent<CharacterController>();
+            _playerController = controller;
         }
+
+        SetInputs();
     }
        
-    void FixedUpdate()
+    /// <summary>
+    /// Update the Camera's position and rotation in a FixedUpdate().
+    /// </summary>
+    public void FixedUpdateForCamera()
     {
         MoveCamera();           
     } 
