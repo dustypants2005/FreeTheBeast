@@ -13,13 +13,16 @@ namespace Assets._scripts
         void Awake()
         {
             CharacterMovement = new CharacterMovement();
+            CharacterMovement.Init(isLocalPlayer, GetComponent<CharacterController>());
             Config = new CharacterConfig();
             GunAttack = new GunAttack();
-            GunAttack.SetGun();
+            GunAttack.SetGun(transform);
+
         }
 
         void Update()
         {
+            if (!isLocalPlayer) return;   // if we are not this player, we should not control that player.     
             CharacterMovement.UpdateMovement(Config.amIrooted, Config.inControl);
         }
 

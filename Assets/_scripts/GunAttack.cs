@@ -14,29 +14,27 @@ namespace Assets._scripts
 
         public void Fire()
         {
-            if (!isLocalPlayer) return;
-
             if(Input.GetAxis("Fire1") == 1.0f){
                 if(!shot){
                     CmdFire();
                     shot = true;
-                    if(attackSpeed <= 0 )
-                    {
-                        attackSpeed = 0;
-                    }
                     StartCoroutine(Delay());
                 }            
             }        
         }
 
-        public void SetGun()
+        public void SetGun(Transform playerTransform)
         {
-            foreach (Transform child in transform)
+            foreach (Transform child in playerTransform)
             {
-                if (child.gameObject.tag == Constants.CharacterSnapPoints.Gun.ToString())
+                foreach (Transform grandChild in child)
                 {
-                    gun = child;
+                    if (grandChild.gameObject.tag == Constants.CharacterSnapPoints.Gun.ToString())
+                    {
+                        gun = child;
+                    }
                 }
+                
             }
         }
 
@@ -52,6 +50,10 @@ namespace Assets._scripts
             RpcFire();
         }
 
+
+        /// <summary>
+        /// Contains the logic of what happens during the fire. Bullets, muzzle flash, ect. excluding local player needs such as controls.
+        /// </summary>
         [ClientRpc]
         public void RpcFire()
         {
